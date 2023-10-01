@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { mayorDeEdadValidator } from '../utils/custom-validators';
 
 @Component({
   selector: 'app-reactive-form',
@@ -11,12 +12,27 @@ export class ReactiveFormComponent {
 
   constructor(private formBuilder: FormBuilder) {
     this.userForm = this.formBuilder.group({
-      name: this.formBuilder.control(''),
-      age: this.formBuilder.control(''),
-
-      email: this.formBuilder.control(''),
-
-      passaword: this.formBuilder.control(''),
+      name: ['', [Validators.required]],
+      age: [null, [Validators.required, mayorDeEdadValidator]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
+  }
+  get emailControl() {
+    return this.userForm.controls['email'];
+  }
+  get passwordValid() {
+    return this.userForm.controls['password'];
+  }
+  get ageControl() {
+    return this.userForm.controls['age'];
+  }
+
+  onSubmit(): void {
+    if (this.userForm.valid) {
+      console.log(this.userForm.value);
+    } else {
+      console.log('Error al cargar formulario');
+    }
   }
 }

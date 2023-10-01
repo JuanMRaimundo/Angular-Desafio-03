@@ -1,28 +1,64 @@
 <h1>Bienvenido/a al curso</h1>
-<form [formGroup]="userForm">
-  <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+<form class="d-grid col-6" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div class="mb-6 row">
+    <label class="col col-form-label">Nombre Completo</label>
     <div class="col-sm-10">
+      <input formControlName="name" type="text" class="form-control mb-3" />
+    </div>
+    <label class="col-3 col-form-label">Edad</label>
+    <div class="col">
+      <input formControlName="age" type="number" class="form-control mb-3" />
+      <div
+        class="mayor-edad"
+        *ngIf="ageControl.invalid && ageControl.hasError('menorEdad')"
+      >
+        Debes ser mayor de 18 años.
+      </div>
+    </div>
+    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-5">
       <input
         formControlName="email"
         type="text"
-        readonly
-        class="form-control-plaintext"
+        class="form-control"
         id="staticEmail"
-        value="email@example.com"
+        [ngClass]="{
+          'is-invalid': emailControl.invalid && emailControl.touched
+        }"
       />
+      <div class="invalid-feedback">
+        <ng-container *ngIf="emailControl.errors?.['required']">
+          Este campo es requerido.
+        </ng-container>
+        <ng-container *ngIf="emailControl.errors?.['email']">
+          Debes ingresar un e-mail válido.
+        </ng-container>
+      </div>
     </div>
   </div>
   <div class="mb-3 row">
     <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
-    <div class="col-sm-10">
+    <div class="col-sm-5">
       <input
         formControlName="password"
         type="password"
         class="form-control"
         id="inputPassword"
+        [ngClass]="{
+          'is-invalid': passwordValid.invalid && passwordValid.touched
+        }"
       />
+      <div class="invalid-feedback">
+        <ng-container *ngIf="passwordValid?.errors?.['required']">
+          Este campo es requerido.
+        </ng-container>
+        <ng-container *ngIf="passwordValid?.hasError('minlength')">
+          La contraseña debe tener al menos 8 caracteres.
+        </ng-container>
+      </div>
     </div>
   </div>
-  <button class="btn btn-danger" type="submit">Enviar</button>
+  <button class="btn btn-warning" type="submit" [disabled]="userForm.invalid">
+    Enviar
+  </button>
 </form>
